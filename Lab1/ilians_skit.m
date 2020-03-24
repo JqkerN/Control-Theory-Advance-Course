@@ -131,13 +131,31 @@ clear all; clc; close all;
 s = tf('s');
 G = 20/((s+1)*( (s/20)^2 + (s/20) +1));
 Gd = 10/(s+1);
-w_I = 
+w_I = 10;
+wc = 10;
+
+p1 = 5*wc;
+p2 = 10*wc;
+
+pole1 = 1/(s/p1 + 1);
+pole2 = 1/(s/p2 + 1);
+
 Fy = (s + w_I)/s * G^(-1) * Gd;
+Fy_prop = Fy*pole1*pole2 % Proper
 
+Go = G*Fy;
+Gc = Go/(1 + Go);
+Go_prop = G*Fy_prop;
+Gc_prop = Go_prop/(1 + Go_prop);
+pole(Gc_prop)
 
-
-
-
+figure(4221)
+bode(Gc); hold on;
+bode(Gc_prop); legend('Gc not proper', 'Gc proper');
+figure(4222)
+step(Gc); hold on;
+step(Gc_prop); legend('Gc not proper', 'Gc proper');
+stepinfo(Gc)
 
 
 
