@@ -128,29 +128,7 @@ step(Gc_prop); legend('Gc not proper', 'Gc proper');
 % -------------------------------
 clear all; clc; close all;
 
-s = tf('s');
-G = 20/((s+1)*( (s/20)^2 + (s/20) +1));
-Gd = 10/(s+1);
-w_I = 
-Fy = (s + w_I)/s * G^(-1) * Gd;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Fy = 
 
 
 
