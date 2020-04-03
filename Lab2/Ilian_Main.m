@@ -48,10 +48,10 @@ sigma(G); title('3.1.3 singular values'); grid on;
 disp(' ')
 disp('<strong>---------------------------------------------------</strong>')
 disp('<strong>Task 3.1.4</strong>')
-s = 0;
-sysmp_zero = minreal(minphase);
-G_RGA = sysmp_zero.C*(s*eye(size(sysmp_zero.A)) - sysmp_zero.A)^(-1)*sysmp_zero.B + sysmp_zero.D;
-RGA_zero = G_RGA.*inv(G_RGA)'
+
+RGA = G.*inv(G)';
+disp('RGA: ')
+disp(evalfr(RGA,0))
 
 %% 3.1.5
 disp(' ')
@@ -89,10 +89,10 @@ disp(tzero(G_NON(2,1)))
 disp('Zeros G_NON(2,2):')
 disp(tzero(G_NON(2,2)))
 
-s = 0;
-sysNONmp_zero = minreal(nonminphase);
-G_RGA_NON = sysNONmp_zero.C*(s*eye(size(sysNONmp_zero.A)) - sysNONmp_zero.A)^(-1)*sysNONmp_zero.B + sysNONmp_zero.D;
-RGA_zero_NON = G_RGA_NON.*inv(G_RGA_NON)'
+
+RGA_NON = G_NON.*inv(G_NON)';
+disp('RGA: ')
+disp(evalfr(RGA_NON,0))
 
 disp('plot figure 3161: singular values')
 figure(3161)
