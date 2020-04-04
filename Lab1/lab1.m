@@ -78,8 +78,8 @@ wc = 10;
 L = wc / s;
 Fy = L*G^(-1); % Not proper
 
-p1 = 5*wc;
-p2 = 5*wc;
+p1 = 10*wc;
+p2 = 10*wc;
 pole1 = 1/(s/p1 + 1);
 pole2 = 1/(s/p2 + 1);
 Fy_prop = Fy*pole1*pole2; % Proper
@@ -106,19 +106,85 @@ Gc_prop = Go_prop/(1 + Go_prop);
 
 
 % --- 4.2.2 ---
-wI = 0.7*wc;
-Fy1 = (s+wI)/s * G^(-1) * Gd; % Unmodified
-Fy2 = Fy1*pole1*pole2 % Proper modified
+%--- Parameters -------
+p1 = 50;
+p2 = 50;
+wI = 5;
+Gd = [Gd];
+% Gd2 = 1;
+% Gd3 = G;
+% --------------------
 
-Go = G*Fy2;
-Gc2 = Go/(1 + Go); 
-figure(4221)
-bode(Gc); hold on;
-bode(Gc2); legend('Gc', 'Gc modified');
-figure(4222)
+pole1 = 1/(s/p1 + 1);
+pole2 = 1/(s/p2 + 1);
+
+for ii = 1:1
+    Fy1 = (s+wI)/s * G^(-1) * Gd(ii); % Unmodified
+    Fy2 = Fy1*pole1*pole2; % Proper modified
+
+%     Go = G*Fy1 + Gd(ii);
+%     Gc1 = Go/(1 + Go);
+%     Go = G*Fy2 + Gd(ii);
+%     Gc2 = Go/(1 + Go);
+    y1 = 1 / (1+G*Fy1)*Gd(ii);
+    y2 = 1 / (1+G*Fy2)*Gd(ii);
+%     subplot(2,2,ii)
+% %     figure()
+%     bode(Gc1); hold on;
+%     bode(Gc2); legend('y unmodified', 'y modified');
+%     subplot(1,2,ii)
+% %     figure()
+%     step(y1); hold on;
+%     step(y2); legend('Gc', 'Gc modified');
+%     stepinfo(y2)
+    % figure(4223)
+    % pzmap(Gc2); grid on;
+end
+
+
+% --- 4.2.3 ---
+F = Fy2;
+S = 1/ (1+L);
+Go = F*G;
+Gc = Go / (1 + Go); 
+figure(1)
+% subplot(1,2,1)
+margin(Gc); hold on;
+figure(2)
+% subplot(1,2,2)
 step(Gc); hold on;
-step(Gc2); legend('Gc', 'Gc modified');
-figure(4223)
-pzmap(Gc2); grid on;
+% 1) decide wc and phase
+wc = 14.3; phi = 30;
+wcd = 20;
+% phase = phi + 6 - 180
+dB = -3.77;
+mag = db2mag(dB);
+%
 
+% r = y+1;
+% u = Fr*Fy*S - Fy2
+% ---------- Parameters ----------
+beta = 0.33; 
+gamma = 0;
+td = 1 / (wcd*sqrt(beta));
+ti = 10 / wcd;
+% --------------------------------
+
+% ---------- Controller ----------
+K = 1/(sqrt(beta)* mag);
+e1 = 1 / (3*K); % 3 when s->0 for G(s)
+Lead = (td*s + 1) / (beta*td*s + 1);
+Lag = (ti*s + 1) / (ti*s + gamma);
+tao = 0.01;
+Fr = 1 / (1+ tao*s);
+F = F * K * Lead;% * Lag;
+Gc = G*Fr / (1 + G*Fy); 
+figure(1)
+% subplot(1,2,1)
+margin(Gc); legend('Gc(s)', 'Gc(s) with Lead'); hold off;
+figure(2)
+% subplot(1,2,2)
+step(Gc); legend('Gc(s)', 'Gc(s) with Lead'); hold off;
+stepinfo(Gc)
+% -------------------
 
