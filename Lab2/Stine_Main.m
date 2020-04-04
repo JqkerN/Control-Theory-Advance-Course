@@ -117,14 +117,14 @@ wc_nm = 0.02;
 % ---- for f1 -------
 g11 = G(1,1);
 T1 = tan(phi - pi + pi/2 - angle(evalfr(g11,i*wc_min))) / wc_min ;
-l11 = evalfr(g11, i*wc_min) * (1 + 1/(i*wc_min*T1));
-K1 = 1 / abs(l11);
+l11 = g11 * (1 + 1/(s*T1));
+K1 = 1 / abs(evalfr(l11, i*wc_min));
 f1 = K1 * (1 + 1/(s*T1));
 % ---- for f2 -------
 g22 = G(2,2);
 T2 = tan(phi - pi + pi/2 - angle(evalfr(g22,i*wc_min))) / wc_min ;
-l22 = evalfr(g22, i*wc_min) * (1 + 1/(i*wc_min*T2));
-K2 = 1 / abs(l22);
+l22 = g22 * (1 + 1/(s*T2));
+K2 = 1 / abs(evalfr(l22, i*wc_min));
 f2 = K2 * (1 + 1/(s*T2));
 
 F1_min = [f1 0 ; 0 f2];
@@ -143,14 +143,14 @@ suptitle('Min phase')
 % ---- for f1 -------
 g11 = G_NON(1,1);
 T1 = tan(phi - pi + pi/2 - angle(evalfr(g11,i*wc_nm))) / wc_nm ;
-l11 = evalfr(g11, i*wc_nm) * (1 + 1/(i*wc_nm*T1));
-K1 = 1 / abs(l11);
+l11 = g11 * (1 + 1/(s*T1));
+K1 = 1 / abs(evalfr(l11, i*wc_nm));
 f1 = K1 * (1 + 1/(s*T1));
 % ---- for f2 -------
 g22 = G_NON(2,2);
 T2 = tan(phi - pi + pi/2 - angle(evalfr(g22,i*wc_nm))) / wc_nm ;
-l22 = evalfr(g22, i*wc_nm) * (1 + 1/(i*wc_nm*T2));
-K2 = 1 / abs(l22);
+l22 = g22 * (1 + 1/(s*T2));
+K2 = 1 / abs(evalfr(l22, i*wc_nm));
 f2 = K2 * (1 + 1/(s*T2));
 
 F1_nm = [f1 0 ; 0 f2];
@@ -173,10 +173,10 @@ disp('<strong>Task 3.2.2</strong>')
 
 % ----------------- ALL F -----------------------
 F_all = {F1_min, F2_min, F1_nm, F2_nm};
-F = F_all{1}
+F = F_all{3}
 % ----------------- ALL G -----------------------
 G_all = {G , G_NON};
-G = G_all{1};
+G = G_all{2};
 % ----- Sensativity & comp. Sensativity ---------
 S = inv((eye(2) + G*F));
 T1 = S * G*F;
@@ -187,4 +187,5 @@ disp(' ')
 disp('<strong>---------------------------------------------------</strong>')
 disp('<strong>Task 3.2.3</strong>')
 
+% Skala om for G_non min??
 closedloop
