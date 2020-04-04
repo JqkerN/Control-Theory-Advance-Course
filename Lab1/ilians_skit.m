@@ -121,12 +121,12 @@ figure(4211)
 bode(Gc); hold on;
 bode(Gc_prop); legend('Gc not proper', 'Gc proper');
 figure(4212)
-step(Gc); hold on;
-step(Gc_prop); legend('Gc not proper', 'Gc proper');
+step(minreal(Gc)); hold on;
+step(minreal(Gc_prop)); legend('Gc not proper', 'Gc proper');
 
 disp('Gc:')
 disp(stepinfo(Gc))
-
+minreal(Fy_prop)
 disp('Gc proper:')
 disp(stepinfo(Gc_prop))
 
@@ -152,11 +152,11 @@ pole3 = 1/(s/p3 + 1);
 
 
 Fy_not_prop = (s + w_I)/s * G^(-1) * Gd;
-Fy_prop_1 = Fy_not_prop*pole1*pole1 % Proper
+Fy_prop_1 = Fy_not_prop*pole1*pole1; % Proper
 Fy_prop_2 = Fy_not_prop*pole2*pole2; % Proper
 Fy_prop_3 = Fy_not_prop*pole1*pole2*pole3; % Proper
 
-
+minreal(Fy_prop_1)
 Gc_not_prop = Gd/(1 + G*Fy_not_prop);
 Gc_prop_1 = Gd/(1 + G*Fy_prop_1);
 Gc_prop_2 = Gd/(1 + G*Fy_prop_2);
@@ -196,12 +196,13 @@ K = 1/db2mag(-2);%/(sqrt(beta)*db2mag(-3.77));% sqrt(beta) / db2mag(-16);
 Fy_lead = Fy_prop_1 * K* (tao_d*s + 1)/(beta*tao_d*s + 1);
 Go_lead = Fy_lead*G;
 Gc_lead = Go_lead/(1+Go_lead);
-
-figure(4231)
-subplot(1,2,1); bode(minreal(Gc)); grid on; hold on;
-bode(minreal(Gc_lead)); 
-subplot(1,2,2); step(minreal(Gc)); grid on; hold on;
-step(minreal(Gc_lead));
+minreal(Fy_lead)
+% figure(4231)
+% % subplot(1,2,1); bode(minreal(Gc)); grid on; hold on;
+% % bode(minreal(Gc_lead)); 
+% % subplot(1,2,2); 
+% % step(minreal(Gc)); grid on; hold on;
+% step(minreal(Gc_lead)); grid on;
 
 disp('Gc:')
 disp(stepinfo(minreal(Gc)))
@@ -220,10 +221,11 @@ step(minreal(Gc_tot));grid on;
 % 
 Gc_tot = G*Fy_lead*Fr/(1+G*Fy_lead);
 figure(4231)
-subplot(1,2,1); bode(minreal(Gc)); grid on; hold on;
-bode(minreal(Gc_lead)); bode(minreal(Gc_tot));
-subplot(1,2,2); step(minreal(Gc)); grid on; hold on;
-step(minreal(Gc_lead));step(minreal(Gc_tot)); legend('Gc', 'Gc with lead', 'Gc with lead and Fr')
+% subplot(1,2,1); bode(minreal(Gc)); grid on; hold on;
+% bode(minreal(Gc_lead)); bode(minreal(Gc_tot));
+% subplot(1,2,2); step(minreal(Gc)); grid on; hold on;
+% step(minreal(Gc_lead));
+step(minreal(Gc_tot)); grid on;%legend('Gc', 'Gc with lead', 'Gc with lead and Fr')
 % 
 % 
 % bode(minreal(Gc_tot)); legend('Gc', 'Gc with lead', 'Gc with lead and Fr')
