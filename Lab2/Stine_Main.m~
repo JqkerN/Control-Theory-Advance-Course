@@ -141,13 +141,13 @@ suptitle('Min phase')
 
 % ----------------- NON MIN PHASE -----------------------
 % ---- for f1 -------
-g11 = G_NON(1,1);
+g11 = G(1,1);
 T1 = tan(phi - pi + pi/2 - angle(evalfr(g11,i*wc_nm))) / wc_nm ;
 l11 = evalfr(g11, i*wc_nm) * (1 + 1/(i*wc_nm*T1));
 K1 = 1 / abs(l11);
 f1 = K1 * (1 + 1/(s*T1));
 % ---- for f2 -------
-g22 = G_NON(2,2);
+g22 = G(2,2);
 T2 = tan(phi - pi + pi/2 - angle(evalfr(g22,i*wc_nm))) / wc_nm ;
 l22 = evalfr(g22, i*wc_nm) * (1 + 1/(i*wc_nm*T2));
 K2 = 1 / abs(l22);
@@ -156,8 +156,8 @@ f2 = K2 * (1 + 1/(s*T2));
 F1_nm = [f1 0 ; 0 f2];
 F2_nm = [0 f1 ; f2 0];
 
-L1 = G_NON * F1_nm;
-L2 = G_NON * F2_nm;
+L1 = G * F1_nm;
+L2 = G * F2_nm;
 figure(2)
 subplot(1,2,1)
 bode(L1); grid on;
@@ -173,16 +173,13 @@ disp('<strong>Task 3.2.2</strong>')
 
 % ----------------- ALL F -----------------------
 F_all = {F1_min, F2_min, F1_nm, F2_nm};
-F = F_all{1}
-% ----------------- ALL G -----------------------
-G_all = {G , G_NON};
-G = G_all{1};
-% ----- Sensativity & comp. Sensativity ---------
+F = F_all{1};
 S = inv((eye(2) + G*F));
 T1 = S * G*F;
 
+
 % 3.2.3
-close all;
+clc; close all;
 disp(' ')
 disp('<strong>---------------------------------------------------</strong>')
 disp('<strong>Task 3.2.3</strong>')
