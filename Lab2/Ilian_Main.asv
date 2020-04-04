@@ -109,8 +109,10 @@ disp('<strong>Task 3.2.1</strong>')
 
 %---------------------------
 %       VARIABLES:
-phi = pi/3; % Intended phase margin
+phi_mp = pi/3; % Intended phase margin (minimum phase case!)
 wc_mp = 0.1;   % rad/s crossover frequency  (minimum phase case!)
-wc = 0.02;     % rad/s crossover frequency  (NON-minumum phase case!)
 %---------------------------
 
+Design a decentralized controller by pairing inputs and outputs according to the RGA analysis. 
+The intended phase margin is ?m = ?/3 and the crossover frequency ?c is 0.1 rad/s for the minimum phase case and 0.02 rad/s for the
+non-minimum phase case. (To make sure that the problem is correctly solved, investigate the Bode diagram of L.)
