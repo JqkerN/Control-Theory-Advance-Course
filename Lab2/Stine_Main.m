@@ -5,25 +5,25 @@ close all; clear all; clc;
 disp('<strong>Task 3.1.1</strong>')
 s = tf('s');
 sysmp = minreal(minphase);
-G = minreal(sysmp.C*(s*eye(size(sysmp.A)) - sysmp.A)^(-1)*sysmp.B + sysmp.D);
+Gmp = minreal(sysmp.C*(s*eye(size(sysmp.A)) - sysmp.A)^(-1)*sysmp.B + sysmp.D);
 
-size(G)
+size(Gmp)
 disp('Poles G(1,1):')
-disp(pole(G(1,1)))
+disp(pole(Gmp(1,1)))
 disp('Poles G(1,2):')
-disp(pole(G(1,2)))
+disp(pole(Gmp(1,2)))
 disp('Poles G(2,1):')
-disp(pole(G(2,1)))
+disp(pole(Gmp(2,1)))
 disp('Poles G(2,2):')
-disp(pole(G(2,2)))
+disp(pole(Gmp(2,2)))
 disp('Zeros G(1,1):')
-disp(tzero(G(1,1)))
+disp(tzero(Gmp(1,1)))
 disp('Zeros G(1,2):')
-disp(tzero(G(1,2)))
+disp(tzero(Gmp(1,2)))
 disp('Zeros G(2,1):')
-disp(tzero(G(2,1)))
+disp(tzero(Gmp(2,1)))
 disp('Zeros G(2,2):')
-disp(tzero(G(2,2)))
+disp(tzero(Gmp(2,2)))
 
 %% 3.1.2
 disp(' ')
@@ -31,9 +31,9 @@ disp('<strong>---------------------------------------------------</strong>')
 disp('<strong>Task 3.1.2</strong>')
 
 disp('Poles G:')
-disp(pole(G))
+disp(pole(Gmp))
 disp('Zeros G:')
-disp(tzero(G))
+disp(tzero(Gmp))
 
 %% 3.1.3
 disp(' ')
@@ -42,14 +42,14 @@ disp('<strong>Task 3.1.3</strong>')
 
 disp('plot figure 313: singular values')
 figure(313)
-sigma(G); title('3.1.3 singular values'); grid on;
+sigma(Gmp); title('3.1.3 singular values'); grid on;
 
 %% 3.1.4
 disp(' ')
 disp('<strong>---------------------------------------------------</strong>')
 disp('<strong>Task 3.1.4</strong>')
 
-RGA = G.*inv(G)';
+RGA = Gmp.*inv(Gmp)';
 disp('RGA: ')
 disp(evalfr(RGA,0))
 
@@ -60,7 +60,7 @@ disp('<strong>Task 3.1.5</strong>')
 
 disp('plot figure 315: G(*,*) step response')
 figure(315)
-step(G); title('3.1.5 Step response'); grid on;
+step(Gmp); title('3.1.5 Step response'); grid on;
 disp('Ans. One could notice that they are coupled. Which matches with the matrix from 3.1.5')
 
 %% 3.1.6
@@ -103,7 +103,7 @@ figure(3162)
 step(G_NON); title('3.1.6(2) Step response'); grid on;
 
 %% 3.2.1
-clc; close all;
+close all;
 disp(' ')
 disp('<strong>---------------------------------------------------</strong>')
 disp('<strong>Task 3.2.1</strong>')
@@ -115,71 +115,65 @@ wc_nm = 0.02;
 
 % ----------------- MIN PHASE -----------------------
 % ---- for f1 -------
-g11 = G(1,1);
-T1 = tan(phi - pi + pi/2 - angle(evalfr(g11,i*wc_min))) / wc_min ;
-l11 = g11 * (1 + 1/(s*T1));
-K1 = 1 / abs(evalfr(l11, i*wc_min));
-f1 = K1 * (1 + 1/(s*T1));
+g11 = Gmp(1,1);
+T11 = tan(phi - pi/2 - angle(evalfr(g11,i*wc_min))) / wc_min ;
+l11 = g11 * (1 + 1/(s*T11));
+K11 = 1 / abs(evalfr(l11, i*wc_min));
+f11 = minreal(K11 * (1 + 1/(s*T11)));
+% f11 = K11 * (1 + 1/(s*T11));
 % ---- for f2 -------
-g22 = G(2,2);
-T2 = tan(phi - pi + pi/2 - angle(evalfr(g22,i*wc_min))) / wc_min ;
-l22 = g22 * (1 + 1/(s*T2));
-K2 = 1 / abs(evalfr(l22, i*wc_min));
-f2 = K2 * (1 + 1/(s*T2));
+g22 = Gmp(2,2);
+T22 = tan(phi - pi/2 - angle(evalfr(g22,i*wc_min))) / wc_min ;
+l22 = g22 * (1 + 1/(s*T22));
+K22 = 1 / abs(evalfr(l22, i*wc_min));
+f22 = minreal(K22 * (1 + 1/(s*T22)));
+% f22 = K22 * (1 + 1/(s*T22));
 
-F1_min = [f1 0 ; 0 f2];
-F2_min = [0 f1 ; f2 0];
+F1_min = [f11 0 ; 0 f22];
 
-L1 = G * F1_min;
-L2 = G * F2_min;
+L1 = Gmp * F1_min;
 figure(1)
-subplot(1,2,1)
-bode(L1); grid on;
-subplot(1,2,2)
-bode(L2); grid on;
-suptitle('Min phase')
+bode(L1); grid on; hold on;
+
 
 % ----------------- NON MIN PHASE -----------------------
 % ---- for f1 -------
-g11 = G_NON(1,1);
-T1 = tan(phi - pi + pi/2 - angle(evalfr(g11,i*wc_nm))) / wc_nm ;
-l11 = g11 * (1 + 1/(s*T1));
-K1 = 1 / abs(evalfr(l11, i*wc_nm));
-f1 = K1 * (1 + 1/(s*T1));
+g12 = G_NON(1,2);
+T12 = tan(phi - pi/2 - angle(evalfr(g12,i*wc_nm))) / wc_nm ;
+l12 = g12 * (1 + 1/(s*T12));
+K12 = 1 / abs(evalfr(l12, i*wc_nm));
+f12 = minreal(K12 * (1 + 1/(s*T12)));
 % ---- for f2 -------
-g22 = G_NON(2,2);
-T2 = tan(phi - pi + pi/2 - angle(evalfr(g22,i*wc_nm))) / wc_nm ;
-l22 = g22 * (1 + 1/(s*T2));
-K2 = 1 / abs(evalfr(l22, i*wc_nm));
-f2 = K2 * (1 + 1/(s*T2));
+g21 = G_NON(2,1);
+T21 = tan(phi - pi/2 - angle(evalfr(g21,i*wc_nm))) / wc_nm ;
+l21 = g21 * (1 + 1/(s*T21));
+K21 = 1 / abs(evalfr(l21, i*wc_nm));
+f21 = minreal(K21 * (1 + 1/(s*T21)));
 
-F1_nm = [f1 0 ; 0 f2];
-F2_nm = [0 f1 ; f2 0];
+F2_nm = [0 f12 ; f21 0];
 
-L1 = G_NON * F1_nm;
 L2 = G_NON * F2_nm;
-figure(2)
-subplot(1,2,1)
-bode(L1); grid on;
-subplot(1,2,2)
-bode(L2); grid on;
-suptitle('Non min phase')
+
+bode(L2); 
+legend('Min phase' , 'Non min phase')
+hold off;
+
 
 %% 3.2.2
-clc; close all;
+close all;
 disp(' ')
 disp('<strong>---------------------------------------------------</strong>')
 disp('<strong>Task 3.2.2</strong>')
 
 % ----------------- ALL F -----------------------
-F_all = {F1_min, F2_min, F1_nm, F2_nm};
-F = F_all{3}
+F_all = {F1_min, F2_nm};
+F = F_all{1};
 % ----------------- ALL G -----------------------
-G_all = {G , G_NON};
-G = G_all{2};
+G_all = {Gmp , G_NON};
+G = G_all{1};
 % ----- Sensativity & comp. Sensativity ---------
-S = inv((eye(2) + G*F));
-T1 = S * G*F;
+S = inv((eye(2) + Gmp*F));
+T = S * Gmp*F;
 
 % 3.2.3
 close all;
@@ -187,5 +181,4 @@ disp(' ')
 disp('<strong>---------------------------------------------------</strong>')
 disp('<strong>Task 3.2.3</strong>')
 
-% Skala om for G_non min??
-closedloop
+% closedloop
