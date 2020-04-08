@@ -1,6 +1,5 @@
 close all; clear all; clc;
 
-
 %% 3.1.1
 disp('<strong>Task 3.1.1</strong>')
 s = tf('s');
@@ -111,7 +110,7 @@ disp('<strong>Task 3.2.1</strong>')
 %       VARIABLES:
 phi = pi/3; % Intended phase margin
 wc_mp = 0.1;   % rad/s crossover frequency  (minimum phase case!)
-wc = 0.02;     % rad/s crossover frequency  (NON-minumum phase case!)
+wc_NON = 0.02;     % rad/s crossover frequency  (NON-minumum phase case!)
 %---------------------------
 %       FUNCTIONS:
 T =@(G, w) tan(phi - pi/2 - angle(evalfr(G, 1i*w))) / w;
@@ -120,36 +119,29 @@ K =@(G, w) 1/abs(evalfr(L(G,w), 1i*w));
 f =@(G, w) K(G, w)*(1 + 1/(s*T(G, w)));
 %---------------------------
 G_mp = G;
-f1_mp = f(G_mp(1,1), wc_mp);
-f2_mp = f(G_mp(2,2), wc_mp);
+f1_mp = minreal(f(G_mp(1,1), wc_mp));
+f2_mp = minreal(f(G_mp(2,2), wc_mp));
 
-f1_NON = f(G_NON(1,1), wc);
-f2_NON = f(G_NON(2,2), wc);
+f1_NON = minreal(f(G_NON(1,2), wc_NON));
+f2_NON = minreal(f(G_NON(2,1), wc_NON));
 
-F_1_mp = [f1_mp, 0;0, f2_mp];
-F_2_mp = [0, f1_mp;f2_mp, 0];
+disp('------MINIMUM PHASE-------')
+F_mp = [f1_mp, 0;0, f2_mp]
+disp('-----NON-MINIMUM PHASE----')
+F_NON = [0, f1_NON;f2_NON, 0]
 
-F_1_NON = [f1_NON, 0;0, f2_NON];
-F_2_NON = [0, f1_NON;f2_NON, 0];
+L_mp = minreal(G_mp*F_mp);
+L_NON = minreal(G_NON*F_NON);
 
-L1_mp = G_mp*F_1_mp;
-L2_mp = G_mp*F_2_mp;
-L1 = G_NON*F_1_NON;
-L2 = G_NON*F_2_NON;
 
-disp('plot figure 3211: bode(L1_mp) minphase')
+disp('plot figure 3211: bode(L_mp) minimum phase')
 figure(3211)
-bode(L1_mp); grid on; title('3.2.1(1) Bode(L1_{mp}) minphase');
-disp('plot figure 3212: bode(L2_mp) minphase')
-figure(3212)
-bode(L2_mp); grid on; title('3.2.1(2) Bode(L2_{mp}) minphase');
+bode(L_mp); grid on; title('3.2.1(1): Bode(L_{mp}) minimum phase');
 
-disp('plot figure 3213: bode(L1)')
-figure(3213)
-bode(L1); grid on; title('3.2.1(3) Bode(L1)');
-disp('plot figure 3214: bode(L2)')
-figure(3214)
-bode(L2); grid on; title('3.2.1(4) Bode(L2)');
+
+disp('plot figure 3212: bode(L1)')
+figure(3212)
+bode(L_NON); grid on; title('3.2.1(2): Bode(L_{NON}) non-minimum phase');
 
 
 %% 3.2.2
@@ -157,15 +149,45 @@ disp(' ')
 disp('<strong>---------------------------------------------------</strong>')
 disp('<strong>Task 3.2.2</strong>')
 
-S1 = (eye(2) + L1)^(-1);
-S2 = (eye(2) + L2)^(-1);
-T1 = S1*L1;
-T2 = S2*L2;
+S_NON = (eye(2) + L_NON)^(-1);
+T_NON = S_NON*L_NON;
 
-S1_mp = (eye(2) + L1_mp)^(-1);
-S2_mp = (eye(2) + L2_mp)^(-1);
-T1_mp = S1_mp*L1_mp;
-T2_mp = S2_mp*L2_mp;
+S_mp = (eye(2) + L_mp)^(-1);
+T_mp = S_mp*L_mp;
+
+RGA_mp_0 =  evalfr(G_mp,0).*(pinv(evalfr(G_mp,0)).');
+RGA_mp_wc =  evalfr(G_mp,1i*wc_mp).*(pinv(evalfr(G_mp,1i*wc_mp)).');
+disp('RGA G_{mp}(0): ')
+disp(RGA_mp_0)
+disp('RGA G_{mp}(iwc): ')
+disp(RGA_mp_wc)
+
+RGA_NON_0 = evalfr(G_NON,0).*(pinv(evalfr(G_NON,0)).');
+RGA_NON_wc = evalfr(G_NON,1i*wc_NON).*(pinv(evalfr(G_NON,1i*wc_NON)).');
+disp('RGA G_{NON}(0): ')
+disp(RGA_NON_0)
+disp('RGA G_{NON}(iwc): ')
+disp(RGA_NON_wc)
+
+% disp('MP')
+% disp('u1 - y1')
+% stepinfo(L_mp(1,1)/(1+L_mp(1,1))) % u1 - y1
+% disp('u1 - y2')
+% stepinfo(L_mp(1,2)/(1+L_mp(1,2))) % u1 - y2
+% disp('u2 - y1')
+% stepinfo(L_mp(2,1)/(1+L_mp(2,1))) % u2 - y1
+% disp('u2 - y2')
+% stepinfo(L_mp(2,2)/(1+L_mp(2,2))) % u2 - y2
+% 
+% disp('NON')
+% stepinfo(L_NON(1,1)/(1+L_NON(1,1))) % u1 - y1
+% stepinfo(L_NON(1,2)/(1+L_NON(1,2)))
+% stepinfo(L_NON(2,1)/(1+L_NON(2,1)))
+% stepinfo(L_NON(2,2)/(1+L_NON(2,2)))
 
 G = G_NON;
-F = F_1_NON;
+F = F_NON;
+% disp('Calls closedloop')
+% closedloop
+disp('CALLS close all')
+close all;
