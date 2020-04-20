@@ -11,3 +11,4 @@ Hinf(G);
 Fsim=F; Gsim=G ;
 % Edit parameters in macro.m 
 macro
+s = 1;
