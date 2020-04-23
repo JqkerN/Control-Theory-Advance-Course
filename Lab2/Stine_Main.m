@@ -167,16 +167,19 @@ disp('<strong>Task 3.2.2</strong>')
 
 % ----------------- ALL F -----------------------
 F_all = {F1_min, F2_nm};
-F = F_all{1};
+F = F_all{2};
 % ----------------- ALL G -----------------------
 G_all = {Gmp , G_NON};
-G = G_all{1};
+G = G_all{2};
 % ----- Sensativity & comp. Sensativity ---------
 S = inv((eye(2) + Gmp*F));
 T = S * Gmp*F;
 
+bode(S); hold on;
+bode(T);
+
 % 3.2.3
-close all;
+% close all;
 disp(' ')
 disp('<strong>---------------------------------------------------</strong>')
 disp('<strong>Task 3.2.3</strong>')
