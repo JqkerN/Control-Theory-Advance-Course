@@ -29,14 +29,12 @@ f22 = minreal(K22 * (1 + 1/(s*T22)));
 Fmp_tilde = [f11 0 ; 0 f22];
 Fmp = W1 * Fmp_tilde;
 % ----------------- 3.1.3 -----------------------
-Smp = inv(eye(size(Gmp)) + Gmp * Fmp );
-Tmp = Smp * Gmp * Fmp;
-figure()
-bode(Smp); hold on; grid on;
-bode(Tmp);
+Smp = eye(size(G) + 
 
 
-% ----------------- 3.1.1 -----------------------
+
+
+
 % --- G non min phase ---
 sysNONmp = minreal(nonminphase);
 G_NON = minreal(sysNONmp.C*(s*eye(size(sysNONmp.A)) - sysNONmp.A)^(-1)*sysNONmp.B + sysNONmp.D);
@@ -45,7 +43,7 @@ W1_non = inv(G_NON0);
 G_NON_tilde = G_NON * W1_non;
 figure()
 bode(G_NON_tilde); grid on;
-% ----------------- 3.1.2 -----------------------
+
 wc_NON = 0.02; % cross over frequency
 % ---- for f1 -------
 g12 = G_NON_tilde(1,2);
@@ -62,10 +60,5 @@ f21 = minreal(K21 * (1 + 1/(s*T21)));
 
 F_NON_tilde = [0 f12 ; f21 0];
 F_NON = W1_non * F_NON_tilde;
-% ----------------- 3.1.3 -----------------------
-S_NON = inv(eye(size(G_NON)) + G_NON * F_NON );
-T_NON = S_NON * G_NON * F_NON;
 
-figure()
-bode(S_NON); hold on; grid on;
-bode(T_NON);
+L2 = G_NON * F2_nm;
