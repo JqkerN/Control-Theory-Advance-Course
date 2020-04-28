@@ -43,25 +43,25 @@ f =@(G, w) K(G, w)*(1 + 1/(s*T(G, w)));
 
 VERBOSE = false;
 if VERBOSE == true % TO IDENTIFY HOW TO MATCH F. 
-    RGA_MP_0 =  evalfr(G_tilde_MP,0).*(pinv(evalfr(G_tilde_MP,0)).');
-    RGA_MP_wc =  evalfr(G_tilde_MP,1i*wc_MP).*(pinv(evalfr(G_tilde_MP,1i*wc_MP)).');
+    RGA_MP_0 =  evalfr(G_MP,0).*(pinv(evalfr(G_MP,0)).');
+    RGA_MP_wc =  evalfr(G_MP,1i*wc_MP).*(pinv(evalfr(G_MP,1i*wc_MP)).');
     disp('RGA G_{mp}(0): ')
     disp(RGA_MP_0)
     disp('RGA G_{mp}(iwc): ')
     disp(RGA_MP_wc)
 
-    RGA_NON_0 = evalfr(G_tilde_NON,0).*(pinv(evalfr(G_tilde_NON,0)).');
-    RGA_NON_wc = evalfr(G_tilde_NON,1i*wc_NON).*(pinv(evalfr(G_tilde_NON,1i*wc_NON)).');
+    RGA_NON_0 = evalfr(G_NON,0).*(pinv(evalfr(G_NON,0)).');
+    RGA_NON_wc = evalfr(G_NON,1i*wc_NON).*(pinv(evalfr(G_NON,1i*wc_NON)).');
     disp('RGA G_{NON}(0): ')
     disp(RGA_NON_0)
     disp('RGA G_{NON}(iwc): ')
     disp(RGA_NON_wc)
 end
 
-f1_MP = minreal(f(G_tilde_MP(1,1), wc_MP));
-f2_MP = minreal(f(G_tilde_MP(2,2), wc_MP));
-f1_NON = minreal(f(G_tilde_NON(1,2), wc_NON));
-f2_NON = minreal(f(G_tilde_NON(2,1), wc_NON));
+f1_MP = minreal(f(G_MP(1,1), wc_MP));
+f2_MP = minreal(f(G_MP(2,2), wc_MP));
+f1_NON = minreal(f(G_NON(1,2), wc_NON));
+f2_NON = minreal(f(G_NON(2,1), wc_NON));
 
 F_tilde_MP = [f1_MP, 0;0, f2_MP];
 F_MP = evalfr(G_MP, 0)^(-1)*F_tilde_MP;
